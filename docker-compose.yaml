@@ -138,6 +138,13 @@ services:
       - airflow_internal
       - lab
 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.airflow-webserver.rule=HOST(`airflow.trashcollector.dev`)"
+      - "traefik.http.routers.airflow-webserver.entrypoints=https"
+      - "traefik.http.routers.airflow-webserver.tls.certresolver=letsencrypt"
+
+
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
