@@ -315,3 +315,4 @@ volumes:
 networks:
   airflow_internal:
   lab:
+    external: true
