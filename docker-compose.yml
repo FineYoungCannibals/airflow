@@ -309,8 +309,8 @@ services:
     networks:
       - airflow_internal
 
-volumes:
-  postgres-db-volume:
+#volumes:
+#  postgres-db-volume:
 
 networks:
   airflow_internal:
