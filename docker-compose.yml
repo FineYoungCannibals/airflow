@@ -286,5 +286,5 @@ secrets:
       
 networks:
   airflow_internal:
-  lab:
+  lab_swarm:
     external: true
