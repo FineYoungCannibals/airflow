@@ -1,56 +1,26 @@
-name: Build and Push Docker Image to GHCR
+name: Mirror Airflow Image to GHCR
 
 on:
-    push:
-        branches:
-        - main
+  push:
+    branches: [main]
 
 jobs:
-    build-and-push:
+  push-airflow-image:
     runs-on: ubuntu-latest
 
-	permissions:
-        contents: read
-        packages: write
-	
-	env:
-        IMAGE_PREFIX: ghcr.io/fineyoungcannibals
-	
-	steps:
-		- name: Checkout code
-		  uses: actions/checkout@v3
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-		- name: Set up Docker Buildx
-		  id: buildx
-		  uses: docker/setup-buildx-action@v3
-    
-        - name: Log in to GHCR
-		  uses: docker/login-action@v3
-		  with:
-		    registry: ghcr.io
-			username: ${{ github.actor }}
-			password: ${{ secrets.GHCR_AIRFLOW_PAT }}
+      - name: Pull official Apache Airflow image
+        run: docker pull apache/airflow:2.10.5
 
-        - name: Set lowercase repo name
-		run: echo "REPO_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+      - name: Tag image for GHCR
+        run: docker tag apache/airflow:2.10.5 ghcr.io/fineyoungcannibals/airflow:2.10.5
 
-		# images follow here
-		# airflow-cli
-		- name: Build and push image from Dockerfile.airflowcli
-		  uses: docker/build-push-action@v5
-		  with:
-		     context: .
-			 file: Dockerfile.airflowcli
-			 push: true
-			 builder: ${{ steps.buildx.outputs.name }}
-			 cache-from: type=gha
-             cache-to: type=gha,mode=max
-			 tags: |
-			   ${{ env.IMAGE_PREFIX }}/airflow:latest
-			   ${{ env.IMAGE_PREFIX }}/airflow:${{ github.sha }}
-		# airflow-webserver
-		# airflow-scheduler
-        # airflow-init
-		# airflow-triggerer
-		# airflow-worker
-		# flower
+      - name: Push to GHCR
+        run: docker push ghcr.io/fineyoungcannibals/airflow:2.10.5

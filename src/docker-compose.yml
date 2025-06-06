@@ -94,43 +94,11 @@ x-airflow-common:
     #  condition: service_healthy
 
 services:
-  #postgres:
-    #image: postgres:13
-    #environment:
-    #  POSTGRES_USER: airflow
-    #  POSTGRES_PASSWORD: airflow
-    #  POSTGRES_DB: airflow
-    #volumes:
-    #  - postgres-db-volume:/var/lib/postgresql/data
-    #healthcheck:
-    #  test: ["CMD", "pg_isready", "-U", "airflow"]
-    #  interval: 10s
-    #  retries: 5
-    #  start_period: 5s
-    #restart: always
-    #networks:
-    #  - airflow_internal
-
-  #redis:
-    # Redis is limited to 7.2-bookworm due to licencing change
-    # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
-    #image: redis:7.2-bookworm
-    #healthcheck:
-    #  test: ["CMD", "redis-cli", "ping"]
-    #  interval: 10s
-    #  timeout: 30s
-    #  retries: 50
-    #  start_period: 30s
-    #restart: always
-    #networks:
-    #  - airflow_internal
 
   airflow-webserver:
     <<: *airflow-common
     command: webserver
     ports:
-      #- "127.0.0.1:8080:8080" # <----- rd changed
-      #- "100.94.216.28:8080:8080" # <------ rd changed
       - "8080:8080" # <- FH
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1:8080/health"]
