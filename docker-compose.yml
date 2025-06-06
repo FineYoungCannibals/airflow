@@ -95,8 +95,8 @@ services:
   airflow-webserver:
     <<: *airflow-common
     command: webserver
-    ports:
-      - "8080:8080" # <- FH
+    # ports:
+      # - "8081:8080" # <- FH
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1:8080/health"]
       interval: 30s
@@ -251,8 +251,6 @@ services:
   #  UPDATE
   #  I deleted the profile here because portainer's version of docker stack compose doesn't support profiles, yipee
   # See: https://docs.docker.com/compose/profiles/
-  # ports:
-  #  - "100.94.216.28:5555:5555"
   flower:
     <<: *airflow-common
     command: celery flower
