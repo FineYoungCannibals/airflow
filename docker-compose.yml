@@ -105,7 +105,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      <<: *airflow-common-depends-on
+      # <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
     networks:
@@ -131,7 +131,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      <<: *airflow-common-depends-on
+      # <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
     networks:
@@ -156,7 +156,7 @@ services:
       DUMB_INIT_SETSID: "0"
     restart: always
     depends_on:
-      <<: *airflow-common-depends-on
+      # <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
     networks:
@@ -173,7 +173,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      <<: *airflow-common-depends-on
+      # <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
     networks:
@@ -278,7 +278,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      <<: *airflow-common-depends-on
+      # <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
     networks:
