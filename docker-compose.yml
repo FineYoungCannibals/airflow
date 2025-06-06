@@ -105,8 +105,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      airflow-init:
-        condition: service_completed_successfully
+      - airflow-init
     networks:
       - airflow_internal
       - lab_swarm
@@ -130,8 +129,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      airflow-init:
-        condition: service_completed_successfully
+      - airflow-init
     networks:
       - airflow_internal
 
@@ -154,8 +152,7 @@ services:
       DUMB_INIT_SETSID: "0"
     restart: always
     depends_on:
-      airflow-init:
-        condition: service_completed_successfully
+      - airflow-init
     networks:
       - airflow_internal
 
@@ -170,8 +167,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      airflow-init:
-        condition: service_completed_successfully
+      - airflow-init
     networks:
       - airflow_internal
 
@@ -274,8 +270,7 @@ services:
       start_period: 30s
     restart: always
     depends_on:
-      airflow-init:
-        condition: service_completed_successfully
+      - airflow-init
     networks:
       - airflow_internal
 
