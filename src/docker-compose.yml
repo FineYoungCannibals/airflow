@@ -113,12 +113,14 @@ services:
         condition: service_completed_successfully
     networks:
       - airflow_internal
-      - lab
+      - lab_swarm
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.airflow-webserver.rule=HOST(`airflow.trashcollector.dev`)"
       - "traefik.http.routers.airflow-webserver.entrypoints=https"
       - "traefik.http.routers.airflow-webserver.tls.certresolver=letsencrypt"
+      - "traefik.http.services.airflow-webserver.loadbalancer.server.port=8080"
+      - "traefik.docker.network=lab_swarm"
 
 
   airflow-scheduler:
