@@ -252,6 +252,8 @@ services:
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
+  #  UPDATE
+  #  I deleted the profile here because portainer's version of docker stack compose doesn't support profiles, yipee
   # See: https://docs.docker.com/compose/profiles/
   # ports:
   #  - "100.94.216.28:5555:5555"
