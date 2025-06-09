@@ -31,7 +31,7 @@ jobs:
 
       - name: Build and Push to GHCR with image caching
         uses: docker/build-push-action@v5
-    	with: 
+        with:
           context: .
           file: Dockerfile
           push: true
