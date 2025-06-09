@@ -22,5 +22,16 @@ jobs:
       - name: Tag image for GHCR
         run: docker tag apache/airflow:2.10.5 ghcr.io/fineyoungcannibals/airflow:2.10.5
 
-      - name: Push to GHCR
-        run: docker push ghcr.io/fineyoungcannibals/airflow:2.10.5
+      - name: Set up Docker Buildx
+	    uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push to GHCR with image caching
+	    uses: docker/build-push-action@v5
+		with: 
+		   context: .
+		   file: Dockerfile
+		   push: true
+		   builder: ${{ steps.buildx.outputs.name }}
+		   cache-from: type=gha
+		   cache-to: type=gha,mode=max
+		   tags: ${{ env.IMAGE_TAG }}
