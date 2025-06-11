@@ -267,7 +267,7 @@ secrets:
       external: true
     airflow_celery_redis_conn:
       external: true
-    airflow_pg_conn:
+    airflow_pg_conn2:
       external: true
       
 networks:
