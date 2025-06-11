@@ -92,8 +92,8 @@ services:
   airflow-webserver:
     <<: *airflow-common
     command: webserver
-     ports:
-       - "8081:8080" # <- FH
+    ports:
+      - "8081:8080" # <- FH
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1:8080/health"]
       interval: 30s
