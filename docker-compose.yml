@@ -56,9 +56,12 @@ x-airflow-common: &airflow-common
     - airflow_pg_conn
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: /run/secrets/airflow_pg_conn
-    AIRFLOW__CELERY__RESULT_BACKEND: /run/secrets/airflow_celery_pg_conn
-    AIRFLOW__CELERY__BROKER_URL: /run/secrets/airflow_celery_redis_conn
+    #AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: /run/secrets/airflow_pg_conn
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_PG_CONN}
+    #AIRFLOW__CELERY__RESULT_BACKEND: /run/secrets/airflow_celery_pg_conn
+    AIRFLOW__CELERY__RESULT_BACKEND: ${AIRFLOW_CELERY_PG_CONN}
+    #AIRFLOW__CELERY__BROKER_URL: /run/secrets/airflow_celery_redis_conn
+    AIRFLOW__CELERY__BROKER_URL: ${AIRFLOW_CELERY_REDIS_CONN}
     
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
