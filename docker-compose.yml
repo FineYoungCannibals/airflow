@@ -285,9 +285,13 @@ secrets:
 
 volumes:
   airflow_dags:
+    external: true
   airflow_logs:
+    external: true
   airflow_config:
+    external: true
   airflow_plugins:
+    external: true
       
 networks:
   airflow_internal:
