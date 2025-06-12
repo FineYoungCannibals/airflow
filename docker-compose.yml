@@ -75,10 +75,10 @@ x-airflow-common: &airflow-common
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - /srv/airflow/dags:/opt/airflow/dags
-    - /srv/airflow/logs:/opt/airflow/logs
-    - /srv/airflow/config:/opt/airflow/config
-    - /srv/airflow/plugins:/opt/airflow/plugins
+    - airflow_dags:/opt/airflow/dags
+    - airflow_logs:/opt/airflow/logs
+    - airflow_config:/opt/airflow/config
+    - airflow_plugins:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:0"
   #depends_on: &airflow-common-depends-on
     #redis:
@@ -282,6 +282,12 @@ secrets:
       external: true
     airflow_pg_conn:
       external: true
+
+volumes:
+  airflow_dags:
+  airflow_logs:
+  airflow_config:
+  airflow_plugins:
       
 networks:
   airflow_internal:
