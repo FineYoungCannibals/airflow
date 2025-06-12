@@ -90,7 +90,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    command: /opt/airflow/entrypoint.sh webserver
     ports:
       - "8081:8080" # <- FH
     healthcheck:
@@ -115,7 +115,7 @@ services:
 
   airflow-scheduler:
     <<: *airflow-common
-    command: scheduler
+    command: /opt/airflow/entrypoint.sh scheduler
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
@@ -129,7 +129,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
-    command: celery worker
+    command: /opt/airflow/entrypoint.sh celery worker
     healthcheck:
       # yamllint disable rule:line-length
       test:
@@ -151,7 +151,7 @@ services:
 
   airflow-triggerer:
     <<: *airflow-common
-    command: triggerer
+    command: /opt/airflow/entrypoint.sh triggerer
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
       interval: 30s
@@ -170,6 +170,10 @@ services:
     command:
       - -c
       - |
+        export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
+        export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
+        export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
+      
         if [[ -z "${AIRFLOW_UID}" ]]; then
           echo
           echo -e "\033[1;33mWARNING!!!: AIRFLOW_UID not set!\e[0m"
@@ -238,7 +242,11 @@ services:
     command:
       - bash
       - -c
-      - airflow
+      - |
+        export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
+        export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
+        export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
+        exec airflow
     networks:
       - airflow_internal
 
