@@ -90,7 +90,8 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: /opt/airflow/entrypoint.sh webserver
+    entrypoint: /opt/airflow/entrypoint.sh
+    command: webserver
     ports:
       - "8081:8080" # <- FH
     healthcheck:
