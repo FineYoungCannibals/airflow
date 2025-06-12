@@ -238,22 +238,22 @@ services:
     networks:
       - airflow_internal
 
-  airflow-cli:
-    <<: *airflow-common
-    environment:
-      <<: *airflow-common-env
-      CONNECTION_CHECK_MAX_COUNT: "0"
-    # Workaround for entrypoint issue. See: https://github.com/apache/airflow/issues/16252
-    command:
-      - bash
-      - -c
-      - |
-        export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
-        export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
-        export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
-        exec airflow version
-    networks:
-      - airflow_internal
+  #airflow-cli:
+  #  <<: *airflow-common
+  #  environment:
+  #    <<: *airflow-common-env
+  #    CONNECTION_CHECK_MAX_COUNT: "0"
+  #  # Workaround for entrypoint issue. See: https://github.com/apache/airflow/issues/16252
+  #  command:
+  #    - bash
+  #    - -c
+  #    - |
+  #      export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
+  #      export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
+  #      export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
+  #      exec airflow version
+  #  networks:
+  #    - airflow_internal
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
