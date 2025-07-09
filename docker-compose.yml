@@ -56,17 +56,10 @@ x-airflow-common: &airflow-common
     - airflow_pg_conn
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    #AIRFLOW__DATABASE__SQL_ALCHEMY_CONN_FP: /run/secrets/airflow_pg_conn
-    #AIRFLOW__CELERY__RESULT_BACKEND_FP: /run/secrets/airflow_celery_pg_conn
-    #AIRFLOW__CELERY__BROKER_URL_FP: /run/secrets/airflow_celery_redis_conn
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
-    # yamllint disable rule:line-length
-    # Use simple http server on scheduler for health checks
-    # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
-    # yamllint enable rule:line-length
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
@@ -76,24 +69,16 @@ x-airflow-common: &airflow-common
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
     - airflow_dags:/opt/airflow/dags
-    - airflow_logs:/opt/airflow/logs
-    - airflow_config:/opt/airflow/config
-    - airflow_plugins:/opt/airflow/plugins
+    #- airflow_logs:/opt/airflow/logs
+    #- airflow_config:/opt/airflow/config
+    #- airflow_plugins:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:0"
-  #depends_on: &airflow-common-depends-on
-    #redis:
-    #  condition: service_healthy
-    #postgres:
-    #  condition: service_healthy
 
 services:
-
   airflow-webserver:
     <<: *airflow-common
     entrypoint: /opt/airflow/entrypoint.sh
     command: webserver
-    ports:
-      - "8081:8080" # <- FH
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://127.0.0.1:8080/health"]
       interval: 30s
@@ -148,10 +133,13 @@ services:
       # Required to handle warm shutdown of the celery workers properly
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
+      AIRFLOW__CELERY__WORKER_CONCURRENCY: "8" # Setting num procs per worker (cores on CPU per proc) 
     depends_on:
       - airflow-init
     networks:
       - airflow_internal
+    deploy:
+      replicas: 4
 
   airflow-triggerer:
     <<: *airflow-common
@@ -178,6 +166,7 @@ services:
         export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
         export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
         export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
+        export AIRFLOW__WEBSERVER__SECRET_KEY=$$(< /run/secrets/airflow_webserver_secret)
       
         if [[ -z "${AIRFLOW_UID}" ]]; then
           echo
@@ -238,28 +227,6 @@ services:
     networks:
       - airflow_internal
 
-  #airflow-cli:
-  #  <<: *airflow-common
-  #  environment:
-  #    <<: *airflow-common-env
-  #    CONNECTION_CHECK_MAX_COUNT: "0"
-  #  # Workaround for entrypoint issue. See: https://github.com/apache/airflow/issues/16252
-  #  command:
-  #    - bash
-  #    - -c
-  #    - |
-  #      export AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=$$(< /run/secrets/airflow_pg_conn)
-  #      export AIRFLOW__CELERY__RESULT_BACKEND=$$(< /run/secrets/airflow_celery_pg_conn)
-  #      export AIRFLOW__CELERY__BROKER_URL=$$(< /run/secrets/airflow_celery_redis_conn)
-  #      exec airflow version
-  #  networks:
-  #    - airflow_internal
-
-  # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
-  # or by explicitly targeted on the command line e.g. docker-compose up flower.
-  #  UPDATE
-  #  I deleted the profile here because portainer's version of docker stack compose doesn't support profiles, yipee
-  # See: https://docs.docker.com/compose/profiles/
   flower:
     <<: *airflow-common
     entrypoint: /opt/airflow/entrypoint.sh
@@ -282,16 +249,18 @@ secrets:
       external: true
     airflow_pg_conn:
       external: true
+    airflow_webserver_secret:
+      external: true
 
 volumes:
   airflow_dags:
     external: true
-  airflow_logs:
-    external: true
-  airflow_config:
-    external: true
-  airflow_plugins:
-    external: true
+  #airflow_logs:
+  #  external: true
+  #airflow_config:
+  #  external: true
+  #airflow_plugins:
+  #  external: true
       
 networks:
   airflow_internal:
