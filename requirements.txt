@@ -1,0 +1,38 @@
+# ─── Web/API Requests ────────────────────────────────
+requests
+httpx
+beautifulsoup4
+lxml
+
+# --- Other third party integrations ------------------
+boto3
+google-cloud-storage
+
+# ─── File Handling ───────────────────────────────────
+python-magic
+
+#---- Data Sciency Stuff ------------------------------
+polars
+pandas
+
+# ─── Databases & Caches ──────────────────────────────
+mysql-connector-python
+psycopg2-binary
+pymongo
+redis
+trino
+
+# ─── Airflow Providers ───────────────────────────────
+apache-airflow-providers-http
+apache-airflow-providers-ssh
+apache-airflow-providers-docker
+apache-airflow-providers-postgres
+apache-airflow-providers-mysql
+apache-airflow-providers-redis
+apache-airflow-providers-mongo
+apache-airflow-providers-elasticsearch
+apache-airflow-providers-slack
+apache-airflow-providers-sftp
+apache-airflow-providers-telegram
+apache-airflow-providers-sendgrid
+apache-airflow-providers-celery
