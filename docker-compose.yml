@@ -53,6 +53,7 @@ x-airflow-common: &airflow-common
     - airflow_celery_pg_conn
     - airflow_celery_redis_conn
     - airflow_pg_conn
+    - airflow_webserver_secret
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__CORE__FERNET_KEY: ''
