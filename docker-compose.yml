@@ -79,6 +79,8 @@ x-airflow-common: &airflow-common
     - airflow_dags:/opt/airflow/dags
     - airflow_logs:/opt/airflow/logs
   user: "${AIRFLOW_UID:-50000}:0"
+  extra_hosts:
+    - "dev-trino.trashcollector.dev:100.109.242.72"
 
 
 x-airflow-noninit: &airflow-noninit
