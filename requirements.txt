@@ -37,3 +37,4 @@ apache-airflow-providers-sftp
 apache-airflow-providers-telegram
 apache-airflow-providers-sendgrid
 apache-airflow-providers-celery
+apache-airflow-providers-trino
