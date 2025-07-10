@@ -112,6 +112,7 @@ services:
       - airflow-init
     networks:
       - airflow_internal
+      - lab_swarm
 
   airflow-worker:
     <<: *airflow-common
@@ -127,6 +128,7 @@ services:
       - airflow-init
     networks:
       - airflow_internal
+      - lab_swarm
     deploy:
       replicas: 4
 
@@ -138,6 +140,7 @@ services:
       - airflow-init
     networks:
       - airflow_internal
+      - lab_swarm
 
   airflow-init:
     <<: *airflow-common
