@@ -86,7 +86,7 @@ x-airflow-noninit: &airflow-noninit
   entrypoint: /opt/airflow/entrypoint.sh
   depends_on:
     - airflow-init
----
+    
 services:
   airflow-webserver:
     <<: *airflow-noninit
