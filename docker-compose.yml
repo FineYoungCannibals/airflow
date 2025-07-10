@@ -100,6 +100,9 @@ services:
         - "traefik.http.services.airflow-webserver.loadbalancer.server.port=8080"
         - "traefik.docker.network=lab_swarm"
 
+  flower:
+    <<: *airflow-noninit
+    command: celery flower
 
   airflow-scheduler:
     <<: *airflow-noninit
@@ -191,20 +194,16 @@ services:
     volumes:
       - /srv/airflow:/sources
 
-  flower:
-    <<: *airflow-noninit
-    command: celery flower
-
 
 secrets:
-    airflow_celery_pg_conn:
-      external: true
-    airflow_celery_redis_conn:
-      external: true
-    airflow_pg_conn:
-      external: true
-    airflow_webserver_secret:
-      external: true
+  airflow_celery_pg_conn:
+    external: true
+  airflow_celery_redis_conn:
+    external: true
+  airflow_pg_conn:
+    external: true
+  airflow_webserver_secret:
+    external: true
 
 volumes:
   airflow_dags:
