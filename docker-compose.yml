@@ -44,6 +44,12 @@
 #
 # Feel free to modify this file to suit your needs.
 ---
+x-airflow-noninit: &airflow-noninit
+  <<: *airflow-common
+  entrypoint: /opt/airflow/entrypoint.sh
+  depends_on:
+    - airflow-init
+
 x-airflow-common: &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
@@ -73,9 +79,8 @@ x-airflow-common: &airflow-common
     AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
     AIRFLOW__LOGGING__BASE_LOG_FOLDER: /opt/airflow/logs
     AIRFLOW__CELERY__WORKER_LOG_SERVER_PORT: 8793
-  dns:
-    - 100.100.100.100
-    - 1.1.1.1
+  networks:
+    - lab_swarm
 
   volumes:
     - airflow_dags:/opt/airflow/dags
@@ -86,14 +91,8 @@ x-airflow-common: &airflow-common
 
 services:
   airflow-webserver:
-    <<: *airflow-common
-    entrypoint: /opt/airflow/entrypoint.sh
+    <<: *airflow-noninit
     command: webserver
-    depends_on:
-      - airflow-init
-    networks:
-      - airflow_internal
-      - lab_swarm
     deploy:
       labels:
         - "traefik.enable=true"
@@ -105,18 +104,11 @@ services:
 
 
   airflow-scheduler:
-    <<: *airflow-common
-    entrypoint: /opt/airflow/entrypoint.sh
+    <<: *airflow-noninit
     command: scheduler
-    depends_on:
-      - airflow-init
-    networks:
-      - airflow_internal
-      - lab_swarm
 
   airflow-worker:
-    <<: *airflow-common
-    entrypoint: /opt/airflow/entrypoint.sh
+    <<: *airflow-noninit
     command: celery worker
     environment:
       <<: *airflow-common-env
@@ -124,23 +116,13 @@ services:
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
       AIRFLOW__CELERY__WORKER_CONCURRENCY: "8" # Setting num procs per worker (cores on CPU per proc) 
-    depends_on:
-      - airflow-init
-    networks:
-      - airflow_internal
-      - lab_swarm
     deploy:
       replicas: 4
 
   airflow-triggerer:
-    <<: *airflow-common
-    entrypoint: /opt/airflow/entrypoint.sh
+    <<: *airflow-noninit
     command: triggerer
-    depends_on:
-      - airflow-init
-    networks:
-      - airflow_internal
-      - lab_swarm
+
 
   airflow-init:
     <<: *airflow-common
@@ -210,17 +192,11 @@ services:
     user: "0:0"
     volumes:
       - /srv/airflow:/sources
-    networks:
-      - airflow_internal
 
   flower:
-    <<: *airflow-common
-    entrypoint: /opt/airflow/entrypoint.sh
+    <<: *airflow-noninit
     command: celery flower
-    depends_on:
-      - airflow-init
-    networks:
-      - airflow_internal
+
 
 secrets:
     airflow_celery_pg_conn:
@@ -243,6 +219,5 @@ volumes:
   #  external: true
       
 networks:
-  airflow_internal:
   lab_swarm:
     external: true
