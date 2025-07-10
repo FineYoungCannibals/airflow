@@ -3,7 +3,7 @@ FROM apache/airflow:2.10.5
 
 # Install dependencies
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends libyara-dev gcc g++ python3-dev git;
+RUN apt update && apt install -y --no-install-recommends libyara-dev gcc g++ python3-dev git build-essential pkg-config default-libmysqlclient-dev
 
 # Revert back to airflow user
 USER airflow
