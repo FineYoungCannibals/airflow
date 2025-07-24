@@ -14,6 +14,7 @@ python-magic
 #---- Data Sciency Stuff ------------------------------
 polars
 pandas
+pyarrow
 
 # ─── Databases & Caches ──────────────────────────────
 mysql-connector-python
