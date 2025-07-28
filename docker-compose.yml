@@ -120,7 +120,10 @@ services:
       DUMB_INIT_SETSID: "0"
       AIRFLOW__CELERY__WORKER_CONCURRENCY: "8" # Setting num procs per worker (cores on CPU per proc) 
     deploy:
-      replicas: 4
+      replicas: 8
+      placement:
+        constraints:
+          - node.role == worker
 
   airflow-triggerer:
     <<: *airflow-noninit
