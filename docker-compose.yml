@@ -101,14 +101,26 @@ services:
         - "traefik.http.routers.airflow-webserver.tls.certresolver=letsencrypt"
         - "traefik.http.services.airflow-webserver.loadbalancer.server.port=8080"
         - "traefik.docker.network=lab_swarm"
+      placement:
+        constraints:
+          - node.hostname == toolshed3
+
 
   flower:
     <<: *airflow-noninit
     command: celery flower
+     deploy:
+      placement:
+        constraints:
+          - node.hostname == toolshed3
 
   airflow-scheduler:
     <<: *airflow-noninit
     command: scheduler
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == toolshed3
 
   airflow-worker:
     <<: *airflow-noninit
@@ -123,11 +135,16 @@ services:
       replicas: 8
       placement:
         constraints:
-          - node.role == worker
+          - node.hostname == toolshed3
+
 
   airflow-triggerer:
     <<: *airflow-noninit
     command: triggerer
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == toolshed3
 
 
   airflow-init:
@@ -198,6 +215,10 @@ services:
     user: "0:0"
     volumes:
       - /srv/airflow:/sources
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == toolshed3
 
 
 secrets:
