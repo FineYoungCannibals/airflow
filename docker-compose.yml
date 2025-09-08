@@ -109,7 +109,7 @@ services:
   flower:
     <<: *airflow-noninit
     command: celery flower
-     deploy:
+    deploy:
       placement:
         constraints:
           - node.hostname == toolshed3
