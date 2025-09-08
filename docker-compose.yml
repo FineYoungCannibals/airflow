@@ -103,7 +103,7 @@ services:
         - "traefik.docker.network=lab_swarm"
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
 
   flower:
@@ -112,7 +112,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
   airflow-scheduler:
     <<: *airflow-noninit
@@ -120,7 +120,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
   airflow-worker:
     <<: *airflow-noninit
@@ -135,7 +135,7 @@ services:
       replicas: 2
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
 
   airflow-triggerer:
@@ -144,7 +144,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
 
   airflow-init:
@@ -218,7 +218,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == toolshed3
+          - node.hostname == toolshed2
 
 
 secrets:
