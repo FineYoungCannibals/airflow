@@ -132,7 +132,7 @@ services:
       DUMB_INIT_SETSID: "0"
       AIRFLOW__CELERY__WORKER_CONCURRENCY: "8" # Setting num procs per worker (cores on CPU per proc) 
     deploy:
-      replicas: 8
+      replicas: 2
       placement:
         constraints:
           - node.hostname == toolshed3
