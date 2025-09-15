@@ -16,6 +16,9 @@ polars
 pandas
 pyarrow
 
+#-----  Tooling needs --------------
+pycti
+
 # ─── Databases & Caches ──────────────────────────────
 mysql-connector-python
 psycopg2-binary
